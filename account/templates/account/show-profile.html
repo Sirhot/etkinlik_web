@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+    {{user.username}}
+{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+        <div class="row g-3">
+            <!-- Profile Picture -->
+            <div class="col-lg-4 text-center">
+                <img class="img-fluid rounded-circle shadow-lg" 
+                     src="{{user.image.url}}" 
+                     alt="{{ user.username }}" 
+                     style="width: 150px; height: 150px; object-fit: cover;">
+                <h3 class="mt-3 text-primary">{{ user.username | title }}</h3>
+            </div>
+            <!-- User Details -->
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-4">Profil Detayları</h4>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Adı:</strong>
+                                <p class="text-muted">{{ user.first_name | title }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Soyadı:</strong>
+                                <p class="text-muted">{{ user.last_name | title }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Email:</strong>
+                                <p class="text-muted">{{ user.email }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Konum:</strong>
+                                <p class="text-muted">{{ user.location }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Doğum Tarihi:</strong>
+                                <p class="text-muted">{{ user.date_of_birth }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Cinsiyeti:</strong>
+                                <p class="text-muted">{{ user.gender | title }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Telefon Numarası:</strong>
+                                <p class="text-muted">{{ user.phone_number }}</p>
+                            </div>
+                            <div class="col-6">
+                                <strong>İlgi Alanları:</strong>
+                                <p class="text-muted">{{ user.interests }}</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="{% url "edit_profile" user.id %}" class="btn btn-primary btn-sm">Profili Düzenle</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

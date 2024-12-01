@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+    Profili Düzenle
+{% endblock title %}
+{% block content %}
+<div class="container mt-5">
+        <div class="container mt-3">
+        <div class="row">
+            <div class="col-12">
+                <form method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% include "partials/_form.html" %}
+
+                    <button class="btn btn-primary" type="submit">Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

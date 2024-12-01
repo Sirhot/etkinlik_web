@@ -7,9 +7,50 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-12">
-                <h3>{{ event.name | title}}</h3>
-                <p>{{event.desc | safe}}</p>
+                <h3>{{ event.name | title }}</h3>
+                <p>{{ event.desc | safe }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Tarihi ve Zamanı</h5>
+                <p><strong>Tarihi:</strong> {{ event.date }}</p>
+                <p><strong>Zamanı:</strong> {{ event.time }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Konumu & Kategorisi</h5>
+                <p><strong>Konumu:</strong> {{ event.location }}</p>
+                <p><strong>Kategorisi:</strong> {{ event.category }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Etkinlik Süresi </h5>
+                <p>{{ event.eventDuration }} saat</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <h2>Katılımcılar</h2>
+                {% if participants %}
+                    <ul class="list-group">
+                        {% for participant in participants %}
+                        <li class="list-group-item"><a href="{% url "show_participant" participant.user.id %}">{{ participant.user.username | title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                <div class="alert alert-info" role="alert">
+                    Henüz hiçbir katılımcı yok. 
+                </div>
+        {% endif %}
+    </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{% url 'participate' event.id %}" class="btn btn-primary">Katıl</a>
+                <a href="{% url 'event_list' %}" class="btn btn-secondary">Etkinliklere Dön</a>
+                <a href="{% url 'participant_list' %}" class="btn btn-warning">Katıldıklarıma Dön</a>
             </div>
         </div>
     </div>
+
 {% endblock content %}

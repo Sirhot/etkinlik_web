@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'events',
-    'account',
-    'ckeditor'
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -127,6 +126,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+# For creating the folder it will recieve our files using model.py structure
+MEDIA_ROOT = BASE_DIR / "uploads"
+# For making the image url specific
+MEDIA_URL = "/media/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -147,6 +151,8 @@ MESSAGE_TAGS = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'serhatcubukcuoglu41@gmail.com'
-EMAIL_HOST_PASSWORD = 'ojpwlydumdsilwpj'
+EMAIL_HOST_USER = '41@gmail.com'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
+
+AUTH_USER_MODEL = 'account.CustomUser'

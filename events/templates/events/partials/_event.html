@@ -6,7 +6,7 @@
                 <h5 class="card-title">
                     <a href="{% url "event_details" event.slug %}">{{ event.name | title}}</a>
                 </h5>
-                <p class="card-text">{{event.date | date:"SHORT_DATE_FORMAT"}}</p>
+                <p class="card-text">Etkinliğin Tarihi: {{event.date | date:"SHORT_DATE_FORMAT"}}</p>
             </div>
         </div>
     </div>

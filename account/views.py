@@ -1,9 +1,9 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordResetForm
-from account.forms import LoginUserForm, NewUserForm, UserPasswordChangeForm
+from .models import CustomUser
+from account.forms import LoginUserForm, NewUserForm, UserPasswordChangeForm, ProfileEditForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -13,10 +13,10 @@ def login_request(request):
 
     if request.method == "POST":
         form = LoginUserForm(request, data=request.POST)
+        
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-
             user = authenticate(request, username = username, password = password)
 
             if user is not None:
@@ -69,3 +69,26 @@ def logout_request(request):
     messages.add_message(request, messages.SUCCESS, "Çıkış başarılı")
     logout(request)
     return redirect("index")
+
+@login_required()
+def show_profile(request):
+    return render(request, "account/show-profile.html", {"user": request.user})
+
+@login_required()
+def show_participant(request, id):
+    user = get_object_or_404(CustomUser, pk=id)
+    
+    return render(request, "account/show-participant.html", {"user": user})
+
+@login_required()
+def edit_profile(request, id):
+    user = get_object_or_404(CustomUser, pk=id)
+    
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, request.FILES, instance=user)
+        form.save()
+        return redirect("show_profile")
+    else:
+        form = ProfileEditForm(instance=user)
+    
+    return render(request,"account/edit-profile.html",{"form":form})

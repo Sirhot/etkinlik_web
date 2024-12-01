@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from events.forms import EventCreateForm, EventEditForm
-from .models import Event
+from .models import Event, Participant
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
@@ -9,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required()
 def index(request):
-    events = Event.objects.all()
+    events = Event.objects.filter(isActive=1)
     
     paginator = Paginator(events,2)
     page = request.GET.get("page",1)
@@ -22,7 +23,7 @@ def index(request):
 def search(request):
     if "q" in request.GET and request.GET["q"] !="":
         q = request.GET["q"]
-        events = Event.objects.filter(name__contains=q).order_by("date")
+        events = Event.objects.filter(isActive=1, name__contains=q).order_by("date")
     else:
         return redirect("/events")
     
@@ -49,7 +50,7 @@ def create_event(request):
 
 @login_required()
 def event_list(request):
-    events = Event.objects.all()
+    events = Event.objects.filter(isActive=1)
     return render(request,"events/event-list.html", {
         "events": events
     })
@@ -76,8 +77,41 @@ def event_delete(request,id):
     return render(request, "events/event-delete.html",{"event":event})
 
 def details(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    participants = Participant.objects.filter(event=event)
+    
     context = {
-        "event": get_object_or_404(Event, slug = slug)
+        "event": event,
+        "participants": participants,
     }
     
     return render(request, "events/details.html", context)
+
+@login_required()
+def participate(request, id):
+    event = get_object_or_404(Event, id=id)
+
+    if Participant.objects.filter(user=request.user, event=event).exists():
+        messages.add_message(request, messages.WARNING, "Bu etkinliğe önceden katıldınız.")
+        return redirect("event_details", slug=event.slug)
+
+    Participant.objects.create(user=request.user, event=event)
+    messages.add_message(request, messages.SUCCESS, "Etkinliğe katıldınız!")
+    return redirect("event_details", slug=event.slug)
+
+@login_required()
+def participant_list(request):
+    participations = Participant.objects.filter(user=request.user).select_related("event")
+    
+    return render(request, "events/participant-list.html", {"participations": participations})
+
+@login_required
+def delete_participation(request, id):
+    participation = get_object_or_404(Participant, id=id, user=request.user)
+    
+    if request.method == "POST":
+        participation.delete()
+        messages.success(request, "Etkinlikten ayrıldınız.")
+        return redirect("participant_list")
+    
+    return render(request, "events/delete-participation.html", {"participation": participation})
