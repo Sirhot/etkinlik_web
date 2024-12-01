@@ -1,0 +1,13 @@
+{% load static %}
+<div class="card mb-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{% url "event_details" event.slug %}">{{ event.name | title}}</a>
+                </h5>
+                <p class="card-text">{{event.date | date:"SHORT_DATE_FORMAT"}}</p>
+            </div>
+        </div>
+    </div>
+</div>
